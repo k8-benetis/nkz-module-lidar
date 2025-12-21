@@ -14,37 +14,13 @@
 
 import React from 'react';
 import { Sparkles, CheckCircle } from 'lucide-react';
+import { useAuth, useTranslation } from '@nekazari/sdk';
+import { Card, Button } from '@nekazari/ui-kit';
 import './index.css';
 
-// Type definitions for SDK (will be available at runtime from host)
-// For development, these are just type definitions
-interface NekazariClient {
-  get<T = unknown>(path: string): Promise<T>;
-  post<T = unknown, B = unknown>(path: string, body?: B): Promise<T>;
-}
-
-interface UseAuthReturn {
-  user: any;
-  token: string | undefined;
-  tenantId: string | undefined;
-  isAuthenticated: boolean;
-  hasRole: (role: string) => boolean;
-  getToken: () => string | undefined;
-}
-
-// Mock implementations for development (remove when SDK is available)
-// At runtime, these will be provided by the host
-const useAuth = (): UseAuthReturn => ({
-  user: { name: 'Test User', email: 'test@example.com' },
-  token: undefined,
-  tenantId: 'test-tenant',
-  isAuthenticated: false,
-  hasRole: () => true,
-  getToken: () => undefined,
-});
-
 const HelloWorldApp: React.FC = () => {
-  const auth = useAuth();
+  const { user, token, tenantId, isAuthenticated, hasRole, getToken } = useAuth();
+  const { t } = useTranslation('common');
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-green-50 p-6">
@@ -65,7 +41,7 @@ const HelloWorldApp: React.FC = () => {
         </div>
 
         {/* Content Card */}
-        <div className="bg-white rounded-lg shadow-md p-6 mb-6 border border-gray-200">
+        <Card padding="lg" className="mb-6">
           <div className="space-y-4">
             <div className="flex items-start gap-3">
               <CheckCircle className="w-6 h-6 text-green-500 flex-shrink-0 mt-0.5" />
@@ -85,29 +61,37 @@ const HelloWorldApp: React.FC = () => {
               <ul className="list-disc list-inside space-y-1 text-gray-600">
                 <li>Update <code className="bg-gray-100 px-1 rounded">manifest.json</code> with your module details</li>
                 <li>Replace this component with your custom functionality</li>
-                <li>Use the Nekazari SDK for API calls (available at runtime)</li>
+                <li>Use the Nekazari SDK for API calls (imported from <code className="bg-gray-100 px-1 rounded">@nekazari/sdk</code>)</li>
+                <li>Use UI-Kit components (imported from <code className="bg-gray-100 px-1 rounded">@nekazari/ui-kit</code>)</li>
                 <li>Add your module icon to <code className="bg-gray-100 px-1 rounded">assets/icon.png</code></li>
                 <li>Build and package for upload</li>
               </ul>
             </div>
 
-            {auth.isAuthenticated && (
+            {isAuthenticated && (
               <div className="pt-4 border-t border-gray-200">
                 <p className="text-sm text-gray-500">
-                  Authenticated as: <span className="font-medium">{auth.user?.email}</span>
+                  Authenticated as: <span className="font-medium">{user?.email || user?.name}</span>
+                  {tenantId && <span className="ml-2">(Tenant: {tenantId})</span>}
                 </p>
               </div>
             )}
+
+            <div className="pt-4 border-t border-gray-200">
+              <Button variant="primary" onClick={() => alert('Hello from Nekazari module!')}>
+                Test Button (from UI-Kit)
+              </Button>
+            </div>
           </div>
-        </div>
+        </Card>
 
         {/* Info Box */}
         <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
           <p className="text-sm text-blue-800">
-            <strong>Note:</strong> In development mode, authentication context is mocked.
-            When loaded by the NKZ host, you'll have full access to the SDK including
-            <code className="bg-blue-100 px-1 rounded mx-1">useAuth()</code> and
-            <code className="bg-blue-100 px-1 rounded mx-1">NKZClient</code>.
+            <strong>Note:</strong> This template uses the published SDK packages from NPM:
+            <code className="bg-blue-100 px-1 rounded mx-1">@nekazari/sdk</code> and
+            <code className="bg-blue-100 px-1 rounded mx-1">@nekazari/ui-kit</code>.
+            When loaded by the NKZ host, you'll have full access to authentication, API client, and UI components.
           </p>
         </div>
       </div>

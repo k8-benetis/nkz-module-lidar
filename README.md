@@ -24,12 +24,13 @@ npm run build
 ## What's Included
 
 - ✅ Complete "Hello World" example
+- ✅ **SDK packages from NPM** (`@nekazari/sdk`, `@nekazari/ui-kit`)
 - ✅ All dependencies pre-configured
-- ✅ TypeScript setup
+- ✅ TypeScript setup with full type support
 - ✅ Tailwind CSS configured
 - ✅ Vite proxy for API calls (development)
 - ✅ Module Federation configured
-- ✅ Type definitions for SDK
+- ✅ Real SDK usage (no mocks needed!)
 
 ## Customization
 
@@ -40,8 +41,9 @@ npm run build
 
 2. **Customize `src/App.tsx`**:
    - Replace Hello World content with your module
-   - Use NKZ SDK for API calls (available at runtime)
-   - Use UI-Kit components for consistent styling
+   - Use NKZ SDK: `import { NKZClient, useAuth, useTranslation } from '@nekazari/sdk'`
+   - Use UI-Kit components: `import { Button, Card } from '@nekazari/ui-kit'`
+   - All packages are installed from NPM - no configuration needed!
 
 3. **Add your assets**:
    - Create `assets/icon.png` (128x128px)
@@ -70,4 +72,21 @@ See the complete [External Developer Guide](https://github.com/k8-benetis/nekaza
 
 **Happy Coding!** 🎉
 
-> **Branding Note:** "NKZ" is the technical brand used in code and package names. "Nekazari" is the official platform name.
+## SDK Packages
+
+This template uses the **publicly available** SDK packages from NPM:
+
+- **`@nekazari/sdk`** - API client, authentication, i18n
+- **`@nekazari/ui-kit`** - UI components (Button, Card, Input, etc.)
+
+Both packages are licensed under **Apache-2.0**, allowing you to build proprietary/commercial modules.
+
+**Installation**: Automatically installed via `npm install` (no additional setup needed)
+
+**NPM Links**:
+- SDK: https://www.npmjs.com/package/@nekazari/sdk
+- UI-Kit: https://www.npmjs.com/package/@nekazari/ui-kit
+
+---
+
+> **Branding Note:** Packages are published under the `@nekazari` organization on NPM. "Nekazari" is the official platform name.
