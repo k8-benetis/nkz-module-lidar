@@ -8,7 +8,7 @@ export default defineConfig({
   plugins: [
     react(),
     federation({
-      name: 'hello_world_module',
+      name: 'lidar_module',
       filename: 'remoteEntry.js',
       exposes: {
         './App': './src/App.tsx',
@@ -42,7 +42,7 @@ export default defineConfig({
   },
   server: {
     host: '0.0.0.0',
-    port: 5003,
+    port: 5004,
     cors: true,
     // Proxy API calls to avoid CORS issues in development
     proxy: {

@@ -1,12 +1,12 @@
 {
-  "name": "nekazari-module-template",
+  "name": "nkz-module-lidar",
   "version": "1.0.0",
-  "description": "Nekazari Module Template - Quick Start",
+  "description": "LIDAR Point Cloud Viewer for Nekazari Platform - Visualize LAZ files from IDENA in CesiumJS",
   "license": "Apache-2.0",
   "type": "module",
   "main": "./src/App.tsx",
   "scripts": {
-    "dev": "vite --port 5003",
+    "dev": "vite --port 5004",
     "build": "vite build",
     "preview": "vite preview",
     "typecheck": "tsc --noEmit"

@@ -1,92 +1,92 @@
-# NKZ Module Template
+# LIDAR Module - Nekazari Platform
 
-**Quick Start Template** for creating NKZ Platform (Nekazari) modules.
+LIDAR Point Cloud Viewer module for the Nekazari Platform. This module enables visualization of LIDAR point cloud data (LAZ files) from IDENA (Infraestructura de Datos Espaciales de Navarra) in the unified CesiumJS viewer.
 
-Get your module running in 5 minutes! 🚀
+## Features
 
-## Quick Start
+- Download LAZ files from IDENA for selected parcels
+- Automatic conversion to 3D Tiles format for CesiumJS
+- Interactive point cloud visualization in the unified viewer
+- Integration with unified viewer slots (layer-toggle, map-layer, context-panel)
 
+## Architecture
+
+### Backend
+- FastAPI service for LIDAR data download and conversion
+- REST API endpoints for layer management
+- Integration with IDENA data sources
+
+### Frontend
+- React application with Module Federation
+- Integration with unified viewer via slots
+- CesiumJS 3D Tiles visualization
+
+## Development
+
+### Prerequisites
+- Node.js 20+
+- Python 3.11+
+- Docker (for containerized deployment)
+
+### Local Development
+
+#### Backend
 ```bash
-# Clone this template
-git clone https://github.com/k8-benetis/nkz-module-template.git my-module
-cd my-module
-
-# Install dependencies
-npm install
-
-# Start development server
-npm run dev
-
-# Build for production
-npm run build
+cd backend
+pip install -r requirements.txt
+uvicorn app.main:app --reload --port 8000
 ```
 
-## What's Included
+#### Frontend
+```bash
+npm install
+npm run dev  # Starts on port 5004
+```
 
-- ✅ Complete "Hello World" example
-- ✅ **SDK packages from NPM** (`@nekazari/sdk`, `@nekazari/ui-kit`)
-- ✅ All dependencies pre-configured
-- ✅ TypeScript setup with full type support
-- ✅ Tailwind CSS configured
-- ✅ Vite proxy for API calls (development)
-- ✅ Module Federation configured
-- ✅ Real SDK usage (no mocks needed!)
+## Deployment
 
-## Customization
+### Build Docker Images
+```bash
+# Backend
+docker build -f backend/Dockerfile -t ghcr.io/k8-benetis/nkz-module-lidar/lidar-backend:latest .
 
-1. **Update `manifest.json`**:
-   - Change `id`, `name`, `display_name`
-   - Update `author` information
-   - Set `route_path` and `label`
+# Frontend
+docker build -f frontend/Dockerfile -t ghcr.io/k8-benetis/nkz-module-lidar/lidar-frontend:latest .
+```
 
-2. **Customize `src/App.tsx`**:
-   - Replace Hello World content with your module
-   - Use NKZ SDK: `import { NKZClient, useAuth, useTranslation } from '@nekazari/sdk'`
-   - Use UI-Kit components: `import { Button, Card } from '@nekazari/ui-kit'`
-   - All packages are installed from NPM - no configuration needed!
+### Kubernetes Deployment
+```bash
+# Apply deployments
+kubectl apply -f k8s/backend-deployment.yaml
+kubectl apply -f k8s/frontend-deployment.yaml
 
-3. **Add your assets**:
-   - Create `assets/icon.png` (128x128px)
-   - Add screenshots to `assets/`
+# Register module in platform database
+psql -h <db-host> -U <user> -d nekazari -f k8s/registration.sql
+```
 
-4. **Build and package**:
-   ```bash
-   npm run build
-   zip -r my-module-v1.0.0.zip manifest.json package.json vite.config.ts src/ assets/ dist/
-   ```
+## Module Integration
 
-## Documentation
+This module integrates with the Nekazari Platform through:
 
-See the complete [External Developer Guide](https://github.com/k8-benetis/nekazari-public/blob/main/docs/EXTERNAL_DEVELOPER_GUIDE.md) for:
-- Complete SDK reference
-- UI component documentation
-- Upload and validation process
-- Best practices
+1. **Module Federation**: Remote module loaded dynamically by the host
+2. **Slot System**: Provides widgets for:
+   - `layer-toggle`: Layer control widget
+   - `map-layer`: CesiumJS 3D Tiles layer
+   - `context-panel`: Configuration panel
 
-## Support
+## API Endpoints
 
-- **Email**: developers@nekazari.com
-- **Documentation**: [Developer Guide](https://github.com/k8-benetis/nekazari-public/blob/main/docs/EXTERNAL_DEVELOPER_GUIDE.md)
+- `GET /api/lidar/layers` - List available LIDAR layers
+- `POST /api/lidar/layers` - Create new LIDAR layer (download and convert)
+- `GET /api/lidar/layers/{layer_id}` - Get layer details
+- `DELETE /api/lidar/layers/{layer_id}` - Delete layer
 
----
+## Notes
 
-**Happy Coding!** 🎉
+- LAZ to 3D Tiles conversion requires additional tooling (PDAL, 3d-tiles-tools, etc.)
+- IDENA data access may require authentication/API keys
+- Large point clouds may require significant storage and processing resources
 
-## SDK Packages
+## License
 
-This template uses the **publicly available** SDK packages from NPM:
-
-- **`@nekazari/sdk`** - API client, authentication, i18n
-- **`@nekazari/ui-kit`** - UI components (Button, Card, Input, etc.)
-
-Both packages are licensed under **Apache-2.0**, allowing you to build proprietary/commercial modules.
-
-**Installation**: Automatically installed via `npm install` (no additional setup needed)
-
-**NPM Links**:
-- SDK: https://www.npmjs.com/package/@nekazari/sdk
-- UI-Kit: https://www.npmjs.com/package/@nekazari/ui-kit
-
----
-
-> **Branding Note:** Packages are published under the `@nekazari` organization on NPM. "Nekazari" is the official platform name.
+Apache-2.0
