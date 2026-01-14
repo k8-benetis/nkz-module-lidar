@@ -11,7 +11,16 @@ export default defineConfig({
       name: 'lidar_module',
       filename: 'remoteEntry.js',
       exposes: {
+        // Main app component
         './App': './src/App.tsx',
+        // Slots for unified viewer integration
+        './slots': './src/slots/index.tsx',
+        // Individual components (for direct import)
+        './LidarLayerControl': './src/components/slots/LidarLayerControl.tsx',
+        './LidarLayer': './src/components/slots/LidarLayer.tsx',
+        './LidarConfig': './src/components/slots/LidarConfig.tsx',
+        // Context provider
+        './LidarProvider': './src/services/lidarContext.tsx',
       },
       shared: {
         'react': {
@@ -50,20 +59,12 @@ export default defineConfig({
         target: 'https://nkz.artotxiki.com',
         changeOrigin: true,
         secure: true,
-        // Note: Add your token in headers if needed for development
-        // Uncomment and configure if you need to test API calls:
-        // configure: (proxy, _options) => {
-        //   proxy.on('proxyReq', (proxyReq, req, _res) => {
-        //     proxyReq.setHeader('Authorization', 'Bearer YOUR_TOKEN_HERE');
-        //     proxyReq.setHeader('X-Tenant-ID', 'your-tenant-id');
-        //   });
-        // },
       },
     },
   },
   build: {
     target: 'esnext',
-    minify: false,
+    minify: false,  // Keep false for Module Federation compatibility
     cssCodeSplit: false,
     rollupOptions: {
       external: ['react', 'react-dom', 'react-router-dom'],
