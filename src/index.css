@@ -2,11 +2,11 @@
    LIDAR Module - Premium Design System
    ============================================================================
    A stunning, modern design with smooth animations and premium aesthetics
+   
+   NOTE: Do NOT include @tailwind directives here. The host application
+   already includes Tailwind CSS. Including them here would reset global
+   styles and break the host's layout.
    ============================================================================ */
-
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
 
 /* ============================================================================
    CSS Custom Properties
@@ -22,26 +22,26 @@
   --lidar-primary-500: #8b5cf6;
   --lidar-primary-600: #7c3aed;
   --lidar-primary-700: #6d28d9;
-  
+
   /* Accent - Vibrant Cyan for highlights */
   --lidar-accent-400: #22d3ee;
   --lidar-accent-500: #06b6d4;
-  
+
   /* Success - Emerald */
   --lidar-success-400: #34d399;
   --lidar-success-500: #10b981;
-  
+
   /* Gradients */
   --lidar-gradient-primary: linear-gradient(135deg, #8b5cf6 0%, #06b6d4 100%);
   --lidar-gradient-dark: linear-gradient(180deg, #1e1b4b 0%, #0f0d1a 100%);
-  --lidar-gradient-glass: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%);
-  
+  --lidar-gradient-glass: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+
   /* Shadows */
   --lidar-shadow-sm: 0 2px 8px -2px rgba(139, 92, 246, 0.2);
   --lidar-shadow-md: 0 4px 20px -4px rgba(139, 92, 246, 0.3);
   --lidar-shadow-lg: 0 8px 30px -6px rgba(139, 92, 246, 0.4);
   --lidar-shadow-glow: 0 0 40px rgba(139, 92, 246, 0.3);
-  
+
   /* Animation */
   --lidar-ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
   --lidar-ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
@@ -61,11 +61,10 @@
 
 .lidar-card {
   @apply rounded-2xl backdrop-blur-xl border border-white/20;
-  background: linear-gradient(135deg, 
-    rgba(255, 255, 255, 0.95) 0%, 
-    rgba(248, 250, 252, 0.9) 100%
-  );
-  box-shadow: 
+  background: linear-gradient(135deg,
+      rgba(255, 255, 255, 0.95) 0%,
+      rgba(248, 250, 252, 0.9) 100%);
+  box-shadow:
     0 4px 24px -4px rgba(139, 92, 246, 0.15),
     0 1px 3px rgba(0, 0, 0, 0.05),
     inset 0 1px 0 rgba(255, 255, 255, 0.6);
@@ -73,11 +72,10 @@
 
 .lidar-card-dark {
   @apply rounded-2xl backdrop-blur-xl border border-white/10;
-  background: linear-gradient(135deg, 
-    rgba(30, 27, 75, 0.95) 0%, 
-    rgba(15, 13, 26, 0.9) 100%
-  );
-  box-shadow: 
+  background: linear-gradient(135deg,
+      rgba(30, 27, 75, 0.95) 0%,
+      rgba(15, 13, 26, 0.9) 100%);
+  box-shadow:
     0 4px 24px -4px rgba(0, 0, 0, 0.4),
     inset 0 1px 0 rgba(255, 255, 255, 0.05);
 }
@@ -111,10 +109,9 @@
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(135deg, 
-    rgba(255, 255, 255, 0.2) 0%, 
-    transparent 50%
-  );
+  background: linear-gradient(135deg,
+      rgba(255, 255, 255, 0.2) 0%,
+      transparent 50%);
   opacity: 0;
   transition: opacity 0.3s ease;
 }
@@ -144,10 +141,9 @@
 
 .lidar-progress {
   @apply relative h-2 rounded-full overflow-hidden;
-  background: linear-gradient(90deg, 
-    rgba(139, 92, 246, 0.1) 0%, 
-    rgba(6, 182, 212, 0.1) 100%
-  );
+  background: linear-gradient(90deg,
+      rgba(139, 92, 246, 0.1) 0%,
+      rgba(6, 182, 212, 0.1) 100%);
 }
 
 .lidar-progress-bar {
@@ -161,18 +157,21 @@
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    rgba(255, 255, 255, 0.4) 50%,
-    transparent 100%
-  );
+  background: linear-gradient(90deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.4) 50%,
+      transparent 100%);
   animation: shimmer 1.5s infinite;
 }
 
 @keyframes shimmer {
-  0% { transform: translateX(-100%); }
-  100% { transform: translateX(100%); }
+  0% {
+    transform: translateX(-100%);
+  }
+
+  100% {
+    transform: translateX(100%);
+  }
 }
 
 /* ============================================================================
@@ -184,9 +183,12 @@
 }
 
 @keyframes pulse-glow {
-  0%, 100% {
+
+  0%,
+  100% {
     box-shadow: 0 0 0 0 rgba(139, 92, 246, 0.4);
   }
+
   50% {
     box-shadow: 0 0 20px 4px rgba(139, 92, 246, 0.2);
   }
@@ -236,8 +238,17 @@
 }
 
 @keyframes status-pulse {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.6; transform: scale(0.8); }
+
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 0.6;
+    transform: scale(0.8);
+  }
 }
 
 .lidar-status-dot-success {
@@ -277,6 +288,7 @@
     opacity: 0;
     transform: translateY(10px);
   }
+
   100% {
     opacity: 1;
     transform: translateY(0);
@@ -303,8 +315,17 @@
 }
 
 @keyframes iconGlow {
-  0%, 100% { opacity: 0; transform: scale(0.8); }
-  50% { opacity: 0.3; transform: scale(1.2); }
+
+  0%,
+  100% {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+
+  50% {
+    opacity: 0.3;
+    transform: scale(1.2);
+  }
 }
 
 /* ============================================================================
@@ -329,10 +350,9 @@
 .lidar-layer-item {
   @apply flex items-center justify-between p-3 rounded-xl;
   @apply transition-all duration-200;
-  background: linear-gradient(135deg, 
-    rgba(248, 250, 252, 0.8) 0%, 
-    rgba(241, 245, 249, 0.6) 100%
-  );
+  background: linear-gradient(135deg,
+      rgba(248, 250, 252, 0.8) 0%,
+      rgba(241, 245, 249, 0.6) 100%);
   border: 1px solid rgba(203, 213, 225, 0.3);
 }
 
@@ -356,18 +376,17 @@
   @apply border-2 border-dashed rounded-xl p-6 text-center;
   @apply transition-all duration-300;
   border-color: rgba(139, 92, 246, 0.3);
-  background: linear-gradient(135deg, 
-    rgba(139, 92, 246, 0.03) 0%, 
-    rgba(6, 182, 212, 0.03) 100%
-  );
+  background: linear-gradient(135deg,
+      rgba(139, 92, 246, 0.03) 0%,
+      rgba(6, 182, 212, 0.03) 100%);
 }
 
-.lidar-dropzone:hover, .lidar-dropzone-active {
+.lidar-dropzone:hover,
+.lidar-dropzone-active {
   border-color: rgba(139, 92, 246, 0.6);
-  background: linear-gradient(135deg, 
-    rgba(139, 92, 246, 0.08) 0%, 
-    rgba(6, 182, 212, 0.08) 100%
-  );
+  background: linear-gradient(135deg,
+      rgba(139, 92, 246, 0.08) 0%,
+      rgba(6, 182, 212, 0.08) 100%);
   box-shadow: 0 4px 20px rgba(139, 92, 246, 0.1);
 }
 
