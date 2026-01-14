@@ -33,6 +33,7 @@ import requests
 
 from app.config import settings
 from app.services.storage import storage_service
+from app.services.tile_cache import tile_cache
 from app.db import SessionLocal
 from app.models import LidarProcessingJob, LidarCoverageIndex, JobStatus
 
@@ -181,18 +182,16 @@ class LidarPipeline:
         """
         logger.info("Phase A: Ingesting point cloud")
         
-        # Step 1: Download if URL (or copy if local path)
-        self.input_laz = os.path.join(self.work_dir, "input.laz")
-        
+        # Step 1: Get tile from cache or download
+        # The tile cache stores raw PNOA tiles in MinIO so they can be reused
+        # for parcels in the same area (big win for overlapping requests)
         if laz_url.startswith(('http://', 'https://')):
-            logger.info(f"Downloading from {laz_url}")
-            response = requests.get(laz_url, stream=True, timeout=300)
-            response.raise_for_status()
-            with open(self.input_laz, 'wb') as f:
-                for chunk in response.iter_content(chunk_size=8192):
-                    f.write(chunk)
-            logger.info(f"Downloaded to {self.input_laz}")
+            logger.info(f"Getting tile from cache or downloading: {laz_url}")
+            self.input_laz = tile_cache.get_or_download_tile(laz_url, self.work_dir)
+            logger.info(f"Tile ready at: {self.input_laz}")
         else:
+            # Local file - just copy (user uploads)
+            self.input_laz = os.path.join(self.work_dir, "input.laz")
             shutil.copy(laz_url, self.input_laz)
         
         # Step 2: Build PDAL pipeline for crop + denoise

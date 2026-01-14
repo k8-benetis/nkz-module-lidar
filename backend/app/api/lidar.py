@@ -511,3 +511,25 @@ async def upload_laz_file(
             os.rmdir(temp_dir)
         raise
 
+
+# ============================================================================
+# Cache Statistics
+# ============================================================================
+
+@router.get("/cache/stats")
+async def get_cache_stats(
+    user=Depends(require_auth)
+):
+    """
+    Get PNOA tile cache statistics.
+    
+    Shows how many tiles are cached and how many downloads were avoided
+    by reusing cached tiles for overlapping parcels.
+    """
+    from app.services.tile_cache import tile_cache
+    
+    stats = tile_cache.get_cache_stats()
+    return {
+        "cache": stats,
+        "description": "Tiles are cached in MinIO to avoid re-downloading for overlapping parcels"
+    }

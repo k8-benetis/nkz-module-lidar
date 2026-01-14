@@ -139,3 +139,39 @@ class PointCloudLayer(Base):
     
     def __repr__(self):
         return f"<PointCloudLayer(orion_entity_id={self.orion_entity_id})>"
+
+
+class LidarTileCache(Base):
+    """
+    Cache table for downloaded PNOA/source LAZ tiles.
+    
+    Tiles are shared across tenants since they're public data.
+    This avoids re-downloading large LAZ files for overlapping parcels.
+    """
+    __tablename__ = "lidar_tile_cache"
+    
+    # Primary key is the tile name (unique identifier from source)
+    tile_name = Column(String(255), primary_key=True)
+    
+    # Original source URL
+    source_url = Column(Text, nullable=False)
+    
+    # MinIO storage path (e.g., "lidar-source-tiles/PNOA-2023-0001.laz")
+    minio_bucket = Column(String(100), nullable=False, default="lidar-source-tiles")
+    minio_key = Column(String(500), nullable=False)
+    
+    # File metadata
+    file_size_bytes = Column(Integer, nullable=True)
+    point_count = Column(Integer, nullable=True)
+    
+    # Usage tracking
+    download_date = Column(DateTime, default=datetime.utcnow)
+    last_accessed = Column(DateTime, default=datetime.utcnow)
+    access_count = Column(Integer, default=1)
+    
+    # Status (in case download was interrupted)
+    is_complete = Column(String(20), default="complete")  # complete, downloading, failed
+    
+    def __repr__(self):
+        return f"<LidarTileCache(tile_name={self.tile_name}, access_count={self.access_count})>"
+

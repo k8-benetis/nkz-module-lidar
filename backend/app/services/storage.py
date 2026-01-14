@@ -134,31 +134,6 @@ class StorageService:
         tileset_url = f"{settings.TILESET_PUBLIC_URL}/{prefix}/tileset.json"
         return tileset_url
     
-    def upload_file(
-        self,
-        file_obj: BinaryIO,
-        key: str,
-        content_type: str = 'application/octet-stream'
-    ) -> str:
-        """
-        Upload a single file to storage.
-        
-        Args:
-            file_obj: File-like object to upload
-            key: S3 key (path in bucket)
-            content_type: MIME type of the file
-        
-        Returns:
-            Public URL to the file
-        """
-        self.client.upload_fileobj(
-            file_obj,
-            self.bucket,
-            key,
-            ExtraArgs={'ContentType': content_type}
-        )
-        return f"{settings.TILESET_PUBLIC_URL}/{key}"
-    
     def delete_prefix(self, prefix: str) -> int:
         """
         Delete all objects under a prefix (folder).
@@ -198,7 +173,84 @@ class StorageService:
             return True
         except ClientError:
             return False
+    
+    def ensure_bucket(self, bucket: str):
+        """Ensure a specific bucket exists (for source tiles cache)."""
+        try:
+            self.client.head_bucket(Bucket=bucket)
+            logger.debug(f"Bucket {bucket} exists")
+        except ClientError as e:
+            error_code = e.response.get('Error', {}).get('Code', '')
+            if error_code in ('404', 'NoSuchBucket'):
+                logger.info(f"Creating bucket {bucket}")
+                self.client.create_bucket(Bucket=bucket)
+            else:
+                raise
+    
+    def download_file(self, bucket: str, key: str, local_path: str):
+        """
+        Download a file from storage to local path.
+        
+        Args:
+            bucket: Bucket name
+            key: Object key in bucket
+            local_path: Local file path to save to
+        """
+        logger.debug(f"Downloading {bucket}/{key} to {local_path}")
+        self.client.download_file(bucket, key, local_path)
+        logger.debug(f"Downloaded to {local_path}")
+    
+    def upload_file(
+        self,
+        bucket: str = None,
+        key: str = None,
+        file_path: str = None,
+        file_obj: 'BinaryIO' = None,
+        content_type: str = 'application/octet-stream'
+    ) -> str:
+        """
+        Upload a file to storage.
+        
+        Args:
+            bucket: Bucket name (defaults to self.bucket)
+            key: S3 key (path in bucket)
+            file_path: Local file path to upload (use this OR file_obj)
+            file_obj: File-like object to upload (use this OR file_path)
+            content_type: MIME type of the file
+        
+        Returns:
+            Public URL to the file
+        """
+        target_bucket = bucket or self.bucket
+        
+        if file_path:
+            self.client.upload_file(
+                file_path,
+                target_bucket,
+                key,
+                ExtraArgs={'ContentType': content_type}
+            )
+        elif file_obj:
+            self.client.upload_fileobj(
+                file_obj,
+                target_bucket,
+                key,
+                ExtraArgs={'ContentType': content_type}
+            )
+        else:
+            raise ValueError("Either file_path or file_obj must be provided")
+        
+        return f"{settings.TILESET_PUBLIC_URL}/{key}"
+    
+    def file_exists_in_bucket(self, bucket: str, key: str) -> bool:
+        """Check if a file exists in a specific bucket."""
+        try:
+            self.client.head_object(Bucket=bucket, Key=key)
+            return True
+        except ClientError:
+            return False
 
 
 # Singleton instance
 storage_service = StorageService()
+
