@@ -46,9 +46,9 @@ class LidarCoverageIndex(Base):
     # Spatial coverage (polygon geometry)
     geometry = Column(Geometry("POLYGON", srid=4326), nullable=False, index=True)
     
-    # Metadata
+    # Additional metadata (avoid 'metadata' - reserved by SQLAlchemy)
+    extra_metadata = Column(JSONB, nullable=True)
     created_at = Column(DateTime, default=datetime.utcnow)
-    metadata = Column(JSONB, nullable=True)
     
     def __repr__(self):
         return f"<LidarCoverageIndex(tile_name={self.tile_name}, source={self.source})>"
