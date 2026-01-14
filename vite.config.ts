@@ -13,8 +13,8 @@ export default defineConfig({
       exposes: {
         // Main app component
         './App': './src/App.tsx',
-        // Slots for unified viewer integration
-        './slots': './src/slots/index.tsx',
+        // viewerSlots for unified viewer integration - MUST be named './viewerSlots' for host compatibility
+        './viewerSlots': './src/slots/index.tsx',
         // Individual components (for direct import)
         './LidarLayerControl': './src/components/slots/LidarLayerControl.tsx',
         './LidarLayer': './src/components/slots/LidarLayer.tsx',
