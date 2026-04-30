@@ -392,8 +392,7 @@ class LidarPipeline:
         dtm_pipeline = {
             "pipeline": [
                 {"type": "readers.las", "filename": source_laz},
-                {"type": "filters.smrf"},  # Ground classification
-                {"type": "filters.range", "limits": "Classification[2:2]"},  # Ground only
+                {"type": "filters.range", "limits": "Classification[2:2]"},  # Ground only (smrf already ran in Phase A if needed)
                 {
                     "type": "writers.gdal",
                     "filename": dtm_path,
