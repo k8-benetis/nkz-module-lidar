@@ -568,6 +568,9 @@ class LidarPipeline:
             "--out", self.output_tiles_dir,
             "--overwrite"
         ]
+        # Preserve LAS classification and structure attributes for Cesium styling
+        for field in settings.PY3DTILES_EXTRA_FIELDS:
+            cmd.extend(["--extra-fields", field])
 
         logger.info(f"Running: {' '.join(cmd)}")
         env = os.environ.copy()
