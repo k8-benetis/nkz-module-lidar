@@ -589,14 +589,18 @@ class LidarPipeline:
         # Adaptive decimation guardrail: prevent OOM on dense clouds
         source_laz = self._prepare_tiling_input(source_laz)
 
-        # Use py3dtiles Python API to preserve extra LAS fields for Cesium styling
+        # Use py3dtiles Python API with classification + RGB preservation.
+        # Note: py3dtiles 7.0.0 only supports rgb/classification booleans —
+        # arbitrary extra fields (ReturnNumber, HeightAboveGround) require
+        # a newer py3dtiles version with batch table injection support.
         from py3dtiles.convert import convert
 
         convert(
             files=source_laz,
             outfolder=self.output_tiles_dir,
             overwrite=True,
-            extra_fields=settings.PY3DTILES_EXTRA_FIELDS,
+            rgb=True,
+            classification=True,
         )
         
         # Verify tileset.json was created
