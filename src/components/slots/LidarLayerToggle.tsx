@@ -13,9 +13,6 @@ import { useLidarContext, ColorMode } from '../../services/lidarContext';
 const COLOR_MODES: { value: ColorMode; icon: string }[] = [
   { value: 'height', icon: '\u{1F4CF}' },
   { value: 'classification', icon: '\u{1F3F7}\uFE0F' },
-  { value: 'heightAboveGround', icon: '\u{1F4D0}' },
-  { value: 'canopyCover', icon: '\u{1F33F}' },
-  { value: 'verticalDensity', icon: '\u{1F4CA}' },
   { value: 'rgb', icon: '\u{1F3A8}' },
 ];
 
