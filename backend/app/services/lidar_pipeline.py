@@ -590,29 +590,15 @@ class LidarPipeline:
         # Adaptive decimation guardrail: prevent OOM on dense clouds
         source_laz = self._prepare_tiling_input(source_laz)
 
-        # Use py3dtiles command line (more reliable than Python API for large files)
-        # Resolve full path - subprocess may not inherit conda PATH
-        py3dtiles_bin = shutil.which("py3dtiles") or "/opt/conda/bin/py3dtiles"
-        cmd = [
-            py3dtiles_bin, "convert",
-            source_laz,
-            "--out", self.output_tiles_dir,
-            "--overwrite"
-        ]
-        # Preserve LAS classification and structure attributes for Cesium styling
-        for field in settings.PY3DTILES_EXTRA_FIELDS:
-            cmd.extend(["--extra-fields", field])
+        # Use py3dtiles Python API to preserve extra LAS fields for Cesium styling
+        from py3dtiles.convert import convert
 
-        logger.info(f"Running: {' '.join(cmd)}")
-        env = os.environ.copy()
-        env["PATH"] = "/opt/conda/bin:" + env.get("PATH", "")
-        env["PROJ_DATA"] = env.get("PROJ_DATA", "/opt/conda/share/proj")
-        env["PROJ_LIB"] = env.get("PROJ_LIB", "/opt/conda/share/proj")
-        result = subprocess.run(cmd, capture_output=True, text=True, timeout=settings.PY3DTILES_TIMEOUT, env=env)
-        
-        if result.returncode != 0:
-            logger.error(f"py3dtiles failed: {result.stderr}")
-            raise RuntimeError(f"py3dtiles conversion failed: {result.stderr}")
+        convert(
+            files=source_laz,
+            outfolder=self.output_tiles_dir,
+            overwrite=True,
+            extra_fields=settings.PY3DTILES_EXTRA_FIELDS,
+        )
         
         # Verify tileset.json was created
         tileset_path = os.path.join(self.output_tiles_dir, "tileset.json")
