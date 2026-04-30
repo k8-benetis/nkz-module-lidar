@@ -277,7 +277,7 @@ class LidarPipeline:
                 "pipeline": [
                     {"type": "readers.las", "filename": self.cropped_laz},
                     {"type": "filters.smrf"},
-                    {"type": "filters.hag"},
+                    {"type": "filters.hag_nn"},
                     {
                         "type": "writers.las",
                         "filename": self.cropped_laz,
@@ -294,7 +294,7 @@ class LidarPipeline:
                 "pipeline": [
                     {"type": "readers.las", "filename": self.cropped_laz},
                     {"type": "filters.smrf"},
-                    {"type": "filters.hag"},
+                    {"type": "filters.hag_nn"},
                     {
                         "type": "writers.las",
                         "filename": self.cropped_laz,
