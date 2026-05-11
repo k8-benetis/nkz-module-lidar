@@ -4,6 +4,7 @@
  * Registers the module with the host via window.__NKZ__.register().
  * The host wraps all slot widgets with the moduleProvider (LidarProvider).
  */
+import { defineModule } from "@nekazari/module-kit";
 
 import { lidarSlots } from './slots/index';
 
